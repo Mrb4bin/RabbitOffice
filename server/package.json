@@ -1,0 +1,11 @@
+{
+  "name": "rabbit-office-server",
+  "version": "1.0.0",
+  "description": "Self-hosted Rabbit Office server: file storage, collaborative boards, accounts, automatic HTTPS",
+  "main": "src/server.js",
+  "bin": { "rabbit-office": "bin/rabbit-office.js" },
+  "scripts": { "start": "node src/server.js", "setup": "node bin/rabbit-office.js setup" },
+  "engines": { "node": ">=18" },
+  "license": "MIT",
+  "dependencies": { "acme-client": "^5.4.0" }
+}

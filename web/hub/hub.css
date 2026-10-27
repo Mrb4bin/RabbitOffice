@@ -1,0 +1,55 @@
+.hub { flex: 1; display: flex; min-height: 0; }
+html[data-theme^="glass"] .hub { padding: 0 8px 8px; gap: 8px; }
+.hub-nav { width: 230px; flex: none; display: flex; flex-direction: column; gap: 2px; padding: 10px 8px; background: var(--panel-bg); border-right: 1px solid var(--border); }
+html[data-theme^="glass"] .hub-nav { border: 1px solid var(--border); border-radius: 16px; backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); box-shadow: var(--glass-edge), var(--shadow-s); }
+.hub-nav button { display: flex; align-items: center; gap: 10px; border: 0; background: transparent; padding: 9px 12px; border-radius: var(--radius); color: var(--text); text-align: left; font-size: 14px; }
+.hub-nav button:hover { background: var(--hover); }
+.hub-nav button.on { background: var(--selected); color: var(--accent); font-weight: 600; }
+.hub-nav .apps-mini { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 8px 4px; }
+.hub-nav .apps-mini button { padding: 8px; font-size: 12px; justify-content: flex-start; }
+.hub-main { flex: 1; overflow: auto; padding: 32px 40px 40px; user-select: text; }
+html[data-theme^="glass"] .hub-main { padding: 28px 32px; }
+.hub-main h1 { font-size: 28px; margin: 0 0 6px; font-weight: 650; letter-spacing: -.3px; }
+.hub-main h2 { font-size: 15px; margin: 30px 0 12px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+.hub-main h2 .grow { flex: 1; }
+.app-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-top: 22px; }
+.app-tile {
+  display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 14px; border: 1px solid var(--border);
+  background: var(--surface); text-align: left; color: var(--text); position: relative; overflow: hidden; cursor: default;
+  transition: transform .15s var(--ease), box-shadow .15s var(--ease), border-color .15s;
+}
+html[data-theme^="glass"] .app-tile { backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); box-shadow: var(--glass-edge), var(--shadow-s); border-radius: 18px; }
+.app-tile:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--tile); }
+.app-tile .sq { width: 44px; height: 44px; border-radius: 11px; background: var(--tile); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2), 0 4px 12px color-mix(in srgb, var(--tile) 35%, transparent); display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 18px; }
+.app-tile .nm { font-size: 16px; font-weight: 650; }
+.app-tile .ds { font-size: 12.5px; color: var(--text-2); line-height: 1.45; }
+.app-tile .acts { display: flex; gap: 6px; margin-top: 4px; }
+.app-tile .acts .btn { height: 28px; font-size: 12px; }
+.app-tile .acts .btn.primary { background: var(--tile); border-color: var(--tile); }
+.tpl-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+.tpl { border: 1px solid var(--border); border-radius: 12px; background: var(--surface); padding: 8px; text-align: left; color: var(--text); }
+html[data-theme^="glass"] .tpl { backdrop-filter: var(--blur); box-shadow: var(--glass-edge), var(--shadow-s); }
+.tpl:hover { border-color: var(--accent); }
+.tpl .thumb { aspect-ratio: 16/10; border-radius: 8px; background: #fff; border: 1px solid rgba(0,0,0,.06); overflow: hidden; position: relative; margin-bottom: 8px; }
+.tpl .t { font-weight: 600; font-size: 13px; }
+.tpl .s { font-size: 11.5px; color: var(--text-2); }
+.recent-table { width: 100%; border-collapse: collapse; }
+.recent-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.recent-table tr:hover td { background: var(--hover); }
+.recent-table .nm { display: flex; align-items: center; gap: 10px; font-weight: 500; }
+.recent-table .wh { color: var(--text-2); font-size: 12px; max-width: 360px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.banner { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 14px; border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); background: var(--accent-soft); margin-top: 18px; }
+.banner .grow { flex: 1; }
+.srv-card { border: 1px solid var(--border); border-radius: 14px; background: var(--surface); padding: 16px; display: flex; gap: 14px; align-items: center; margin-bottom: 10px; }
+html[data-theme^="glass"] .srv-card { backdrop-filter: var(--blur); box-shadow: var(--glass-edge), var(--shadow-s); }
+.drop-hint { position: fixed; inset: 0; z-index: 800; display: grid; place-items: center; background: color-mix(in srgb, var(--accent) 18%, transparent); border: 3px dashed var(--accent); font-size: 20px; font-weight: 600; color: var(--accent); pointer-events: none; }
+@media (max-width: 760px) {
+  .hub { flex-direction: column-reverse; }
+  .hub-nav { width: auto; flex-direction: row; padding: 4px; border-right: 0; border-top: 1px solid var(--border); justify-content: space-around; padding-bottom: max(4px, env(safe-area-inset-bottom)); }
+  .hub-nav button { flex-direction: column; gap: 2px; font-size: 11px; padding: 6px 8px; }
+  .hub-nav .apps-mini { display: none; }
+  .hub-main { padding: 18px 16px; }
+  .app-tiles { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .app-tile .ds { display: none; }
+  .recent-table .wh, .recent-table .hide-m { display: none; }
+}

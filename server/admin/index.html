@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ru" data-app="hub" data-theme="standard">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rabbit Office Server — администрирование</title>
+<script>try{document.documentElement.dataset.theme=JSON.parse(localStorage.getItem('rabbit.settings')||'{}').theme||'standard'}catch(e){}</script>
+<link rel="stylesheet" href="/core/theme.css"><link rel="stylesheet" href="/core/ui.css">
+<style>
+.wrap{max-width:1040px;margin:0 auto;padding:28px 20px 60px;overflow:auto;height:calc(100vh - 40px);user-select:text}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin:16px 0 26px}
+.stat{border:1px solid var(--border);background:var(--surface);border-radius:14px;padding:14px 16px}
+html[data-theme^="glass"] .stat,html[data-theme^="glass"] .box{backdrop-filter:var(--blur);box-shadow:var(--glass-edge),var(--shadow-s)}
+.stat b{display:block;font-size:24px;margin-top:4px}.stat span{color:var(--text-2);font-size:12px}
+.box{border:1px solid var(--border);background:var(--surface);border-radius:14px;padding:18px;margin-bottom:18px}
+h1{font-size:26px;margin:0}h2{font-size:16px;margin:0 0 12px}
+.login{max-width:360px;margin:12vh auto;padding:28px}
+.mode{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.mode label{border:1px solid var(--border-strong);border-radius:10px;padding:10px;display:flex;gap:8px;align-items:flex-start}
+.mode input{accent-color:var(--accent);margin-top:3px}
+@media(max-width:700px){.mode{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="app">
+<header class="titlebar"><span class="logo logo-squares"><i></i><i></i><i></i><i></i></span><span class="app-name" style="margin-left:6px">Rabbit Office Server</span><span class="grow"></span><a class="tb-btn" href="/" style="color:inherit;text-decoration:none">Открыть офис</a><button class="tb-btn" id="logout" style="display:none">Выйти</button></header>
+<div class="wrap" id="app"></div>
+<script type="module" src="admin.js"></script>
+</body>
+</html>

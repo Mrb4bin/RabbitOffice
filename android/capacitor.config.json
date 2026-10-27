@@ -1,0 +1,7 @@
+{
+  "appId": "office.rabbit.app",
+  "appName": "Rabbit Office",
+  "webDir": "www",
+  "server": { "androidScheme": "http", "cleartext": true },
+  "android": { "allowMixedContent": true, "backgroundColor": "#f3f3f3" }
+}

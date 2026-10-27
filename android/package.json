@@ -1,0 +1,18 @@
+{
+  "name": "rabbit-office-android",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "sync": "node ../scripts/copy-assets.js android && npx cap sync android",
+    "init": "node ../scripts/copy-assets.js android && npx cap add android",
+    "open": "npx cap open android",
+    "build": "npm run sync && cd android && ./gradlew assembleRelease"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/core": "^6.2.0",
+    "@capacitor/filesystem": "^6.0.2",
+    "@capacitor/share": "^6.0.3"
+  },
+  "devDependencies": { "@capacitor/cli": "^6.2.0" }
+}

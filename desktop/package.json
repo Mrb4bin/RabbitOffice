@@ -1,0 +1,98 @@
+{
+  "name": "rabbit-office",
+  "productName": "Rabbit Office",
+  "version": "1.0.0",
+  "description": "Free office suite: Documents, Xel, Point, Desk",
+  "main": "main.js",
+  "author": "Rabbit Office",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "prepare-files": "node ../scripts/copy-assets.js desktop",
+    "dist:win": "npm run prepare-files && electron-builder --win",
+    "dist:mac": "npm run prepare-files && electron-builder --mac",
+    "dist:linux": "npm run prepare-files && electron-builder --linux"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "office.rabbit.app",
+    "files": [
+      "main.js",
+      "preload.js",
+      "web/**",
+      "shared/**",
+      "build/icon.png"
+    ],
+    "fileAssociations": [
+      {
+        "ext": "rdoc",
+        "name": "Rabbit Document",
+        "role": "Editor"
+      },
+      {
+        "ext": "rxel",
+        "name": "Rabbit Workbook",
+        "role": "Editor"
+      },
+      {
+        "ext": "rpt",
+        "name": "Rabbit Presentation",
+        "role": "Editor"
+      },
+      {
+        "ext": "rdesk",
+        "name": "Rabbit Board",
+        "role": "Editor"
+      },
+      {
+        "ext": "docx",
+        "name": "Word Document",
+        "role": "Editor"
+      },
+      {
+        "ext": "xlsx",
+        "name": "Excel Workbook",
+        "role": "Editor"
+      },
+      {
+        "ext": "pptx",
+        "name": "PowerPoint Presentation",
+        "role": "Editor"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.productivity"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm"
+      ],
+      "category": "Office",
+      "maintainer": "Rabbit Office"
+    },
+    "afterPack": "build/adhoc-sign.js",
+    "icon": "build/icon.png",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    }
+  }
+}

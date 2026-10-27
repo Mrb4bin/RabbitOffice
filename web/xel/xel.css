@@ -1,0 +1,62 @@
+:root { --cell-bg: #ffffff; --cell-text: #1f1f1f; --gl: #e2e3e6; --hdr-bg: #f5f6f7; --hdr-text: #5b5f66; --hdr-sel: color-mix(in srgb, var(--accent) 16%, #f5f6f7); --hdr-line: #d5d7db; }
+html[data-theme="dark"], html[data-theme="glass-dark"] { --cell-bg: #1f2023; --cell-text: #e9eaec; --gl: #34363b; --hdr-bg: #26272b; --hdr-text: #a9adb5; --hdr-sel: color-mix(in srgb, var(--accent) 30%, #26272b); --hdr-line: #3b3d43; }
+html[data-theme="glass"] { --hdr-bg: #f3f5f8; }
+.xel-wrap { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; background: var(--cell-bg); }
+html[data-theme^="glass"] .xel-wrap { border-radius: var(--radius-panel); overflow: hidden; border: 1px solid var(--border); box-shadow: var(--glass-edge), var(--shadow-s); }
+.fbar { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border-bottom: 1px solid var(--border); background: var(--surface); flex: none; }
+html[data-theme^="glass"] .fbar { background: var(--surface); backdrop-filter: var(--blur); }
+.fbar .namebox { width: 96px; height: 26px; border: 1px solid var(--border-strong); border-radius: var(--radius-s); background: var(--input-bg); padding: 0 6px; outline: none; font-size: 12.5px; }
+.fbar .namebox:focus { border-color: var(--accent); }
+.fbar .fx-btn { width: 28px; height: 26px; display: grid; place-items: center; border: 0; background: transparent; color: var(--text-2); border-radius: 4px; font-style: italic; font-weight: 600; font-family: Georgia, serif; }
+.fbar .fx-btn:hover { background: var(--hover); color: var(--text); }
+.fbar .finput { flex: 1; height: 26px; border: 1px solid var(--border-strong); border-radius: var(--radius-s); background: var(--input-bg); padding: 0 8px; outline: none; font-family: var(--font-mono); font-size: 12.5px; user-select: text; }
+.fbar .finput:focus { border-color: var(--accent); }
+.fbar .sep { width: 1px; height: 18px; background: var(--border); }
+.grid-host { flex: 1; position: relative; min-height: 0; overflow: hidden; outline: none; }
+.grid-canvas { position: absolute; left: 0; top: 0; pointer-events: none; }
+.grid-scroll { position: absolute; inset: 0; overflow: scroll; outline: none; }
+.grid-spacer { position: relative; }
+.key-sink { position: absolute; left: 0; top: 0; width: 1px; height: 1px; opacity: 0; border: 0; padding: 0; resize: none; pointer-events: none; }
+.grid-overlay { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.cell-editor {
+  position: absolute; pointer-events: auto; border: 2px solid var(--accent); outline: none; resize: none; overflow: hidden;
+  background: var(--cell-bg); color: var(--cell-text); padding: 2px 4px; margin: 0; box-shadow: 0 2px 10px rgba(0,0,0,.18); white-space: pre; z-index: 4; user-select: text; line-height: 1.25;
+}
+.chart-box { position: absolute; pointer-events: auto; background: #fff; border: 1px solid #d9dce1; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,.08); cursor: move; z-index: 3; }
+html[data-theme="dark"] .chart-box, html[data-theme="glass-dark"] .chart-box { background: #24262b; border-color: #3b3e46; }
+.chart-box.sel { outline: 2px solid var(--accent); outline-offset: 1px; }
+.chart-box .rs { position: absolute; right: -6px; bottom: -6px; width: 12px; height: 12px; background: #fff; border: 2px solid var(--accent); border-radius: 50%; cursor: nwse-resize; display: none; }
+.chart-box.sel .rs { display: block; }
+.chart-box svg { display: block; pointer-events: none; }
+.sheet-tabs { display: flex; align-items: center; gap: 2px; padding: 0 6px; height: 32px; background: var(--surface-2); border-top: 1px solid var(--border); flex: none; overflow-x: auto; scrollbar-width: none; }
+.sheet-tabs::-webkit-scrollbar { display: none; }
+.sheet-tab { height: 26px; padding: 0 14px; border: 0; border-radius: 4px; background: transparent; color: var(--text-2); white-space: nowrap; position: relative; }
+.sheet-tab:hover { background: var(--hover); }
+.sheet-tab.on { background: var(--cell-bg); color: var(--accent); font-weight: 600; box-shadow: var(--shadow-s); }
+.sheet-tab .tc { position: absolute; left: 6px; right: 6px; bottom: 2px; height: 3px; border-radius: 2px; }
+.sheet-tab input { width: 90px; border: 1px solid var(--accent); border-radius: 3px; background: var(--input-bg); outline: none; padding: 1px 4px; }
+.ac-list { position: fixed; z-index: 1000; background: var(--menu-bg); border: 1px solid var(--border-strong); border-radius: 8px; box-shadow: var(--shadow-l); padding: 4px; min-width: 260px; max-width: 420px; backdrop-filter: var(--blur); }
+.ac-item { display: flex; gap: 8px; padding: 5px 8px; border-radius: 5px; font-size: 12.5px; }
+.ac-item b { font-family: var(--font-mono); font-weight: 600; }
+.ac-item span { color: var(--text-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ac-item.on { background: var(--selected); }
+.cell-tip { position: fixed; z-index: 900; background: #fffbe0; color: #333; border: 1px solid #e4d27a; padding: 6px 9px; border-radius: 4px; font-size: 12px; max-width: 260px; white-space: pre-wrap; box-shadow: var(--shadow); pointer-events: none; }
+.fn-cats { display: flex; gap: 12px; height: 340px; }
+.fn-cats .cats { width: 170px; flex: none; display: flex; flex-direction: column; gap: 2px; }
+.fn-cats .cats button { text-align: left; border: 0; background: transparent; padding: 6px 10px; border-radius: 6px; color: var(--text); }
+.fn-cats .cats button.on { background: var(--selected); color: var(--accent); font-weight: 600; }
+.fn-cats .fns { flex: 1; overflow: auto; border: 1px solid var(--border); border-radius: 8px; }
+.fn-cats .fn { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+.fn-cats .fn:hover { background: var(--hover); }
+.fn-cats .fn.on { background: var(--selected); }
+.fn-cats .fn code { font-family: var(--font-mono); font-size: 12px; color: var(--accent); }
+.filter-pop { width: 240px; }
+.filter-pop .vals { max-height: 220px; overflow: auto; border: 1px solid var(--border); border-radius: 6px; padding: 4px 6px; margin: 6px 0; display: flex; flex-direction: column; gap: 2px; }
+#print-area { display: none; }
+@media print {
+  .app > :not(#print-area) { display: none !important; }
+  #print-area { display: block !important; }
+  #print-area table { border-collapse: collapse; font: 10pt Calibri, Carlito, Arial, sans-serif; }
+  #print-area td { border: 1px solid #ccc; padding: 2px 5px; white-space: nowrap; }
+}
+@media (max-width: 760px) { .fbar .namebox { width: 64px; } }
