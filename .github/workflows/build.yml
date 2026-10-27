@@ -1,0 +1,134 @@
+# Builds Rabbit Office for Windows, macOS, Linux and Android on GitHub's machines.
+# Run it by hand (Actions → Build → Run workflow) or push a tag like v1.0.0:
+# for a tag the files are also attached to a GitHub Release with that version.
+name: Build
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  desktop:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            args: --win
+            files: desktop/dist/*.exe
+          - os: macos-latest
+            args: --mac --x64 --arm64
+            files: desktop/dist/*.dmg
+          - os: ubuntu-latest
+            args: --linux
+            files: |
+              desktop/dist/*.AppImage
+              desktop/dist/*.deb
+              desktop/dist/*.rpm
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+      - name: Install rpm tools
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y rpm
+      - name: Install dependencies
+        working-directory: desktop
+        run: npm ci --no-audit --no-fund
+      - name: Take version from tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        working-directory: desktop
+        run: npm version "${GITHUB_REF_NAME#v}" --no-git-tag-version --allow-same-version
+      - name: Build
+        working-directory: desktop
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: false
+        run: |
+          npm run prepare-files
+          npx electron-builder ${{ matrix.args }} --publish never -c.extraMetadata.homepage=https://github.com/${{ github.repository }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rabbit-office-${{ runner.os }}
+          path: ${{ matrix.files }}
+          if-no-files-found: error
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Take version from tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        working-directory: android
+        run: npm version "${GITHUB_REF_NAME#v}" --no-git-tag-version --allow-same-version
+      - name: Create Android project
+        working-directory: android
+        run: |
+          npm install --no-audit --no-fund
+          npm run init
+      # With secrets ANDROID_KEYSTORE_BASE64 and ANDROID_KEYSTORE_PASSWORD the APK is signed with
+      # the project's release key (updates install over older versions); without them, with a debug key.
+      - name: Build APK
+        working-directory: android/android
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          v=$(node -p "require('../package.json').version")
+          sed -i "s/versionName \"[^\"]*\"/versionName \"$v\"/" app/build.gradle
+          if [ -n "$KEYSTORE_B64" ]; then
+            ./gradlew assembleRelease --no-daemon
+            echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/release.jks"
+            BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+            "$BT/zipalign" -p -f 4 app/build/outputs/apk/release/app-release-unsigned.apk "$RUNNER_TEMP/aligned.apk"
+            "$BT/apksigner" sign --ks "$RUNNER_TEMP/release.jks" --ks-key-alias rabbit --ks-pass env:KS_PASS --key-pass env:KS_PASS --out "../../Rabbit-Office-$v.apk" "$RUNNER_TEMP/aligned.apk"
+          else
+            ./gradlew assembleDebug --no-daemon
+            cp app/build/outputs/apk/debug/app-debug.apk "../../Rabbit-Office-$v.apk"
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rabbit-office-Android
+          path: Rabbit-Office-*.apk
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [desktop, android]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          merge-multiple: true
+      # A release that already has files (attached by hand) is left as it is.
+      - name: Attach files to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          tag="$GITHUB_REF_NAME"
+          gh release view "$tag" >/dev/null 2>&1 || gh release create "$tag" --title "Rabbit Office ${tag#v}" --generate-notes
+          if [ "$(gh release view "$tag" --json assets -q '.assets | length')" -gt 0 ]; then
+            echo "Release $tag already has files, skipping upload"
+          else
+            gh release upload "$tag" out/*
+          fi
